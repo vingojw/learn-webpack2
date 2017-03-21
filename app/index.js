@@ -9,3 +9,6 @@ function component () {
 }
 
 document.body.appendChild(component());
+
+var moment = require('moment');
+console.log(moment().format());
