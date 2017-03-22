@@ -1,4 +1,6 @@
-// require('../css/index.css');
+require('../css/common.css');
+require('../css/index.css');
+require('../lib/lib.js');
 import _ from 'lodash'
 function component () {
   var element = document.createElement('div');
