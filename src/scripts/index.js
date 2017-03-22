@@ -1,6 +1,6 @@
 require('../css/common.css');
 require('../css/index.css');
-require('../lib/lib.js');
+require('../lib/lib');
 import _ from 'lodash'
 function component () {
   var element = document.createElement('div');
@@ -12,6 +12,7 @@ function component () {
 }
 
 document.body.appendChild(component());
-
 var moment = require('moment');
-console.log(moment().format());
+console.log('height:'+$('body').height());
+var s = require('../common/meta.html');
+console.log(s);

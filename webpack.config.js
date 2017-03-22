@@ -5,6 +5,7 @@ var path = require('path');
 var glob = require('glob');
 var shell = require('shelljs');
 var moment = require('moment');
+var production = process.env.NODE_ENV == 'production';
 var entryNameTime = moment().format("YYYYMMDDhhmmss");
 shell.rm('-rf','./dist');
 //shell.cp('-R', 'stuff/', 'out/Release');
@@ -33,14 +34,31 @@ var configs = {
 				use: [{
 					loader: 'url-loader',
 					options: {
-						limit: 500,
+						limit: 5000,
 						name: '[name]-[hash].[ext]'
 					}
 				}]
-			}
+			},
+			{
+	            test: /\.html$/,
+	            use: [
+	            	{
+	            		loader:'html-loader',
+	            		options:{
+	            			minimize:true,
+	            			removeComments: false,
+	            			collapseWhitespace: false
+	            		}
+	            	}
+	            ]
+        	},
 		]
 	},
 	plugins: [
+		new webpack.ProvidePlugin({ //载入jq,这样就不用每个里面都require了，直接使用  $
+			$: 'jquery',
+			jQuery: 'jquery'
+		}),
 		new webpack.optimize.CommonsChunkPlugin({
 			names: ['vendors'],
 			chunks:Object.keys(entries),
@@ -48,7 +66,17 @@ var configs = {
 		}),
 		extractCSS
 	].concat(getHTMLPlugins()),
+	devServer: {
+	  contentBase: path.join(__dirname, "dist"),
+	  compress: true,
+	  port: 9000
+	}
 };
+
+if(!production){
+	configs.plugins.push(new webpack.HotModuleReplacementPlugin());//保存文件就会刷新页面
+}
+
 
 module.exports = configs;
 
@@ -82,9 +110,9 @@ function getEntries(){
 			htmlPlugins.push(new HtmlWebpackPlugin({ //根据模板插入css/js等生成最终HTML
 				favicon: './src/css/images/favicon.ico', //favicon路径，通过webpack引入同时可以生成hash值
 				filename: './' + name + '.html',
+				title:'123',
 				template: './src/' + name + '.html', //html模板路径
 				inject: true, //js插入的位置，true/'head'/'body'/false
-				hash: true, //为静态资源生成hash值
 				chunks: ['vendors', name],//需要引入的chunk，不配置就会引入所有页面的资源
 				minify: { //压缩HTML文件
 					removeComments: true, //移除HTML中的注释

@@ -1,3 +1,4 @@
 node_modules/
 dist/
+.vecode/
 npm-debug.log
