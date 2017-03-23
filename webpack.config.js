@@ -122,12 +122,12 @@ function getEntries(){
 /*配置html-webpack-plugin*/
 	function getHTMLPlugins(){
 		var htmlPlugins = []
-		glob.sync('./src/*.html').forEach(function (entry) {
-			var name = path.basename(entry, '.html');
+		glob.sync('./src/*.ejs').forEach(function (entry) {
+			var name = path.basename(entry, '.ejs');
 			htmlPlugins.push(new HtmlWebpackPlugin({ //根据模板插入css/js等生成最终HTML
 				favicon: './src/css/images/favicon.ico', //favicon路径，通过webpack引入同时可以生成hash值
 				filename: './' + name + '.html',
-				template: './src/' + name + '.html', //html模板路径
+				template: './src/' + name + '.ejs', //html模板路径
 				inject: true, //js插入的位置，true/'head'/'body'/false
 				chunks: ['vendors', name],//需要引入的chunk，不配置就会引入所有页面的资源
 				minify: { //压缩HTML文件

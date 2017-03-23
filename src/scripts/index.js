@@ -12,7 +12,7 @@ function component () {
 }
 
 document.body.appendChild(component());
-var moment = require('moment');
-console.log('height:'+$('body').height());
+
+console.log('jQuery:$("body").height():'+$('body').height());
 var s = require('../common/meta.html');
 console.log(s);
