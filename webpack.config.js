@@ -31,13 +31,13 @@ var extractCSS = new ExtractTextPlugin({
 var entries = getEntries();//所有实体
 
 var configs = {
-  entry: entries,
-  output: {
-    filename: 'script/'+entryNameTime + '_[name].js',
-    path: path.resolve(__dirname, 'dist'),
-    publicPath:publicPath
-  },
-  module:{
+	entry: entries,
+	output: {
+		filename: 'script/'+entryNameTime + '_[name].js',
+		path: path.resolve(__dirname, 'dist'),
+		publicPath:publicPath
+	},
+	module:{
 		rules:[ // CSS 和 POSTCSS 加载器，使用嵌入 CSS.
 			{
 				test: /\.css$/,
@@ -66,6 +66,10 @@ var configs = {
 	            	}
 	            ]
         	},
+        	{
+        		test:/\.vue$/,
+        		loader:'vue-loader'
+        	}
 		]
 	},
 	plugins: [
@@ -76,7 +80,9 @@ var configs = {
 		new CleanPlugin(['dist']),
 		new webpack.ProvidePlugin({
 			$: 'jquery',
-			jQuery: 'jquery'
+			jQuery: 'jquery',
+			vue: 'vue',
+			Vue: 'vue',
 		}),
 		new webpack.optimize.CommonsChunkPlugin({
 			names: ['vendors'],
@@ -91,10 +97,17 @@ var configs = {
 	  port: 9000
 	}
 };
+configs.resolve = {
+    extensions: ['.js', '.vue'],
+    alias: {
+        'vue$': 'vue/dist/vue.common.js',//https://zhuanlan.zhihu.com/p/25486761
+    }
+};
 
 if(!production){
 	configs.plugins.push(new webpack.HotModuleReplacementPlugin());//保存文件就会刷新页面
 }
+
 
 module.exports = configs;
 
